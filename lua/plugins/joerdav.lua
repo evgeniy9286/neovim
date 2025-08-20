@@ -1,0 +1,5 @@
+return {
+	{
+		"joerdav/templ.vim",
+	},
+}
