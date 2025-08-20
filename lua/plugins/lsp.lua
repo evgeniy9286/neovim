@@ -27,7 +27,6 @@ return {
 			})
 			lspconfig.sqlls.setup({})
 			lspconfig.cmake.setup({})
-			lspconfig.vls.setup({})
 			lspconfig.ts_ls.setup({
 				cmd = { "typescript-language-server", "--stdio" },
 				filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
@@ -39,6 +38,11 @@ return {
 				capabilities = capabilities,
 			})
 			lspconfig.html.setup({
+				on_attach = on_attach,
+				capabilities = capabilities,
+				filetypes = { "html", "templ" },
+			})
+			lspconfig.htmx.setup({
 				on_attach = on_attach,
 				capabilities = capabilities,
 				filetypes = { "html", "templ" },

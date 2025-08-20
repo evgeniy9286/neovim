@@ -12,5 +12,14 @@ return {
 				},
 			})
 		end,
+	},
+	{
+		'williamboman/mason-lspconfig.nvim',
+		config = function()
+			require("mason-lspconfig").setup(
+			{
+				ensure_installed = { "lua_ls", "gopls", "ts_ls", "html", "htmx", "cssls", "templ", "sqlls", "cmake", "dockerls", "docker_compose_language_service", "postgres_lsp", "css_variables", "tailwindcss" }
+			})
+		end
 	}
 }
