@@ -4,9 +4,9 @@ return {
 		configg = function()
 			require("indentmini").setup() -- use default config
 		end,
-		--	configgo = function()
-		--		require("golangci-lint-langserver").setup({})
-		--		end,
+--		configgo = function()
+--			require("golangci-lint-langserver").setup({})
+--		end,
 		config = function()
 			require("nvim-autopairs").setup({
 				disable_filetype = { "TelescopePrompt", "vim" },
@@ -30,7 +30,8 @@ return {
 			lspconfig.ts_ls.setup({
 				cmd = { "typescript-language-server", "--stdio" },
 				filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" }
+				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+				init_options = { hostInfo = "neovim" }
 			})
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -61,11 +62,6 @@ return {
 				cmd = { "postgrestools", "lsp-proxy" },
 				filetypes = { "sql" },
 				root_markers = { "postgrestools.jsonc" }
-			})
-			lspconfig.css_variables.setup({
-				cmd = { "css-variables-language-server", "--stdio" },
-				filetypes = { "css", "scss", "less", "templ" },
-				root_markers = { "package.json", ".git" }
 			})
 			lspconfig.tailwindcss.setup({
 				cmd = { "tailwindcss-language-server", "--stdio" },

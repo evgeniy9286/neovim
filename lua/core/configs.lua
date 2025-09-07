@@ -5,6 +5,7 @@ vim.wo.relativenumber = true
 -- Mouse
 vim.opt.mouse = "a"
 vim.opt.mousefocus = true
+vim.opt.cursorline = true
 
 -- Clipboard
 vim.opt.clipboard = "unnamedplus"
