@@ -25,6 +25,7 @@ return {
 			lspconfig.gopls.setup({
 				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			})
+			lspconfig.golangci_lint_ls.setup({})
 			lspconfig.sqlls.setup({})
 			lspconfig.cmake.setup({})
 			lspconfig.ts_ls.setup({
