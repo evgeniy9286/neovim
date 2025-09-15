@@ -38,6 +38,7 @@ return {
 			lspconfig.cssls.setup({
 				capabilities = capabilities,
 			})
+			lspconfig.cssmodules_ls.setup({})
 			lspconfig.html.setup({
 				on_attach = on_attach,
 				capabilities = capabilities,
