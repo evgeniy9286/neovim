@@ -18,7 +18,7 @@ return {
 		config = function()
 			require("mason-lspconfig").setup(
 			{
-				ensure_installed = { "lua_ls", "gopls", "golangci_lint_ls", "ts_ls", "html", "htmx", "cssls", "cssmodules_ls", "templ", "sqlls", "cmake", "dockerls", "docker_compose_language_service", "postgres_lsp", "tailwindcss"}
+				ensure_installed = { "lua_ls", "gopls", "ts_ls", "html", "htmx", "cssls", "cssmodules_ls", "templ", "sqlls", "cmake", "dockerls", "docker_compose_language_service", "postgres_lsp", "tailwindcss", "angularls"}
 			})
 		end
 	}

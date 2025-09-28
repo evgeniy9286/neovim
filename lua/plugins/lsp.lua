@@ -25,7 +25,7 @@ return {
 			lspconfig.gopls.setup({
 				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			})
-			lspconfig.golangci_lint_ls.setup({})
+		--	lspconfig.angularls.setup({})
 			lspconfig.sqlls.setup({})
 			lspconfig.cmake.setup({})
 			lspconfig.ts_ls.setup({
@@ -92,6 +92,7 @@ return {
 					}
 				}
 			})
+			require('gomodifytags').setup({transformation = "snakecase"})
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
