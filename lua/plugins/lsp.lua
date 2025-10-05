@@ -4,9 +4,9 @@ return {
 		configg = function()
 			require("indentmini").setup() -- use default config
 		end,
---		configgo = function()
---			require("golangci-lint-langserver").setup({})
---		end,
+--				configgo = function()
+--					require("golangci-lint-langserver").setup({})
+--				end,
 		config = function()
 			require("nvim-autopairs").setup({
 				disable_filetype = { "TelescopePrompt", "vim" },
@@ -25,7 +25,7 @@ return {
 			lspconfig.gopls.setup({
 				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			})
-		--	lspconfig.angularls.setup({})
+--			lspconfig.angularls.setup({})
 			lspconfig.sqlls.setup({})
 			lspconfig.cmake.setup({})
 			lspconfig.ts_ls.setup({
@@ -60,6 +60,7 @@ return {
 				filetypes = { "yaml.docker-compose" },
 				root_markers = { "docker-compose.yaml", "docker-compose.yml", "compose.yaml", "compose.yml" }
 			})
+			lspconfig.prismals.setup({})
 			lspconfig.postgres_lsp.setup({
 				cmd = { "postgrestools", "lsp-proxy" },
 				filetypes = { "sql" },
@@ -92,7 +93,7 @@ return {
 					}
 				}
 			})
-			require('gomodifytags').setup({transformation = "snakecase"})
+	--		require('gomodifytags').setup({ transformation = "snakecase" })
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
