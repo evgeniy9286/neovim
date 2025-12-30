@@ -4,9 +4,9 @@ return {
 		configg = function()
 			require("indentmini").setup() -- use default config
 		end,
---				configgo = function()
---					require("golangci-lint-langserver").setup({})
---				end,
+		--		configgo = function()
+		--			require("golangci-lint-langserver").setup({})
+		--		end,
 		config = function()
 			require("nvim-autopairs").setup({
 				disable_filetype = { "TelescopePrompt", "vim" },
@@ -25,15 +25,7 @@ return {
 			lspconfig.gopls.setup({
 				filetypes = { "go", "gomod", "gowork", "gotmpl" },
 			})
---			lspconfig.angularls.setup({})
-			lspconfig.sqlls.setup({})
-			lspconfig.cmake.setup({})
-			lspconfig.ts_ls.setup({
-				cmd = { "typescript-language-server", "--stdio" },
-				filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
-				init_options = { hostInfo = "neovim" }
-			})
+			lspconfig.angularls.setup({})
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
 			lspconfig.cssls.setup({
@@ -93,7 +85,7 @@ return {
 					}
 				}
 			})
-	--		require('gomodifytags').setup({ transformation = "snakecase" })
+			--		require('gomodifytags').setup({ transformation = "snakecase" })
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 				callback = function(ev)
