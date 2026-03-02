@@ -4,15 +4,12 @@ return {
 		configg = function()
 			require("indentmini").setup() -- use default config
 		end,
-		--		configgo = function()
-		--			require("golangci-lint-langserver").setup({})
-		--		end,
 		config = function()
 			require("nvim-autopairs").setup({
 				disable_filetype = { "TelescopePrompt", "vim" },
 			})
 			local lspconfig = require("lspconfig")
-			local servers = { 'gopls', 'ccls', 'cmake', 'templ' }
+			local servers = { 'gopls', 'ccls', 'cmake', 'tsserver', 'templ' }
 			for _, lsp in ipairs(servers) do
 				lspconfig[lsp].setup({
 					on_attach = on_attach,
@@ -23,9 +20,19 @@ return {
 				settings = { Lua = { diagnostics = { globals = { "vim", "require" } } } },
 			})
 			lspconfig.gopls.setup({
-				filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				settings = {
+					gopls = {
+						templateExtensions = { "templ" },
+					},
+				},
+				filetypes = { "go", "gomod", "gowork", "gotmpl", "templ" },
 			})
-			lspconfig.angularls.setup({})
+			lspconfig.angularls.setup({
+				on_attach = on_attach, -- ваша стандартная функция с маппингами
+				capabilities = capabilities,
+				filetypes = { 'typescript', 'html', 'typescript.angular', 'typescript.tsx' },
+				root_dir = require('lspconfig.util').root_pattern("angular.json", "nx.json", "package.json"),
+			})
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
 			lspconfig.cssls.setup({
@@ -35,12 +42,16 @@ return {
 			lspconfig.html.setup({
 				on_attach = on_attach,
 				capabilities = capabilities,
-				filetypes = { "html", "templ" },
+				filetypes = { "html", "templ", "angular" },
 			})
 			lspconfig.htmx.setup({
 				on_attach = on_attach,
 				capabilities = capabilities,
 				filetypes = { "html", "templ" },
+			})
+			lspconfig.templ.setup({
+				on_attach = on_attach,
+				capabilities = capabilities,
 			})
 			lspconfig.dockerls.setup({
 				cmd = { "docker-langserver", "--stdio" },
@@ -85,6 +96,23 @@ return {
 					}
 				}
 			})
+
+			vim.filetype.add({ extension = { templ = "templ" } })
+
+			vim.api.nvim_create_autocmd("BufWritePost", {
+				pattern = "*.templ",
+				callback = function()
+					-- Форматируем файл через templ fmt
+					vim.fn.jobstart({ "templ", "fmt", vim.fn.expand("%") }, {
+						on_exit = function()
+							-- Опционально: запускаем генерацию go-кода сразу после формата
+							-- vim.fn.jobstart({ "templ", "generate" })
+							vim.cmd("edit!") -- Перезагружаем буфер, чтобы увидеть изменения
+						end,
+					})
+				end,
+			})
+
 			--		require('gomodifytags').setup({ transformation = "snakecase" })
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspConfig", {}),

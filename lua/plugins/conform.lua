@@ -4,6 +4,11 @@ return {
 		opts = {},
 		config = function()
 			require("conform").setup({
+				format_on_save = {
+					timeout_ms = 500,
+					lsp_fallback = true,
+					async = false, -- Если поставить true, дергаться будет меньше, но файл может не успеть сохраниться
+				},
 				formatters_by_ft = {
 					lua = { "stylua" },
 					python = { "isort", "black" },
