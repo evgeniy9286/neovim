@@ -39,6 +39,22 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	end,
 })
 
+local original_notify = vim.notify
+vim.notify = function(msg, level, opts)
+  local forbidden = {
+    "db worker",
+    "Update db cache",
+    "sqls",
+    "postgres_lsp",
+    "exit code 1"
+  }
+  for _, word in ipairs(forbidden) do
+    if msg:find(word) then
+      return
+    end
+  end
+  original_notify(msg, level, opts)
+end
 
 require("lazy").setup({
 	spec = {
