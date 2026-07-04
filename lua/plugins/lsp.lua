@@ -9,7 +9,7 @@ return {
 				disable_filetype = { "TelescopePrompt", "vim" },
 			})
 			local lspconfig = require("lspconfig")
-			local servers = { 'gopls', 'ccls', 'cmake', 'tsserver', 'templ' }
+			local servers = { 'gopls', 'ccls', 'cmake', 'templ' }
 			for _, lsp in ipairs(servers) do
 				lspconfig[lsp].setup({
 					on_attach = on_attach,
@@ -22,6 +22,7 @@ return {
 			lspconfig.gopls.setup({
 				settings = {
 					gopls = {
+						--						["ui.diagnostic.staticcheck"] = true,
 						templateExtensions = { "templ" },
 						staticcheck = true,
 						analyses = {
@@ -54,7 +55,7 @@ return {
 							{
 								driver = 'postgresql',
 								dataSourceName =
-								'host=127.0.0.1 port=5432 user=postgres password=pass dbname=stydy_sql sslmode=disable',
+								'host=127.0.0.1 port=5432 user=postgres password=pass dbname=nechan_lesson sslmode=disable',
 							},
 						},
 					},
@@ -63,29 +64,35 @@ return {
 
 			--			lspconfig.sqlls.setup({})
 
+
 			require('lspconfig').ts_ls.setup({
 				settings = {
 					typescript = {
+						preferences = {
+							includeCompletionsForModuleExports = true,
+							includePackageJsonAutoImports = "all",
+							importModuleSpecifierPreference = "non-relative",
+						},
 						check = {
-							unusedVariables = "warning", -- или "error"
+							unusedVariables = "warning",
 						},
 						suggest = {
 							completeFunctionCalls = true,
 						},
 						inlayHints = {
-							includeInlayParameterNameHints = 'all',
+							includeInlayParameterNameHints = 'none',
 							includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-							includeInlayFunctionParameterTypeHints = true,
-							includeInlayVariableTypeHints = true, -- типы переменных
-							includeInlayPropertyDeclarationTypeHints = true,
-							includeInlayFunctionLikeReturnTypeHints = true,
-							includeInlayEnumMemberValueHints = true,
+							includeInlayFunctionParameterTypeHints = false,
+							includeInlayVariableTypeHints = false,
+							includeInlayPropertyDeclarationTypeHints = false,
+							includeInlayFunctionLikeReturnTypeHints = false,
+							includeInlayEnumMemberValueHints = false,
 						}
 					},
 					javascript = {
 						inlayHints = {
-							includeInlayParameterNameHints = 'all',
-							includeInlayVariableTypeHints = true,
+							includeInlayParameterNameHints = 'none',
+							includeInlayVariableTypeHints = false,
 						}
 					}
 				},
@@ -97,31 +104,73 @@ return {
 			})
 
 			lspconfig.angularls.setup({
-				on_attach = on_attach,
 				capabilities = capabilities,
-				filetypes = { 'typescript', 'html', 'typescript.angular', 'typescript.tsx', 'angular.html' },
+				filetypes = { 'typescript', 'html', 'typescript.angular', 'typescript.tsx', 'angular.html', "htmlangular" },
 				root_dir = require('lspconfig.util').root_pattern("angular.json", "nx.json", "package.json"),
+
+				on_new_config = function(new_config, new_root_dir)
+					if not new_root_dir then
+						new_config.cmd = {} -- отменяем запуск, если это не Angular-проект
+					end
+				end,
+
 				settings = {
 					angular = {
 						forceStrictTemplates = true,
-						suggest = {
-							includeInlayHints = true,
-						}
+						forLoopVariableTypes = false,
+						ifAliasTypes = false,
+						letDeclarationTypes = false,
+						eventParameterTypes = false,
+						propertyBindingTypes = false,
+						pipeOutputTypes = false,
+						parameterNameHints = "none",
 					},
 					html = {
 						format = {
-							wrapAttributes = "force", -- Это заставит переносить атрибуты
-							wrapLineLength = 80,
+							wrapAttributes = "force",
+							wrapLineLength = 100,
 						}
 					}
 				},
+
 				on_attach = function(client, bufnr)
-					if client.server_capabilities.inlayHintProvider then
-						vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-						client.server_capabilities.documentFormattingProvider = false
+					if type(on_attach) == "function" then
+						on_attach(client, bufnr)
 					end
+
+					vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+
+					client.server_capabilities.documentFormattingProvider = false
 				end,
 			})
+
+
+			--			lspconfig.angularls.setup({
+			--			on_attach = on_attach,
+			--			capabilities = capabilities,
+			--			filetypes = { 'typescript', 'html', 'typescript.angular', 'typescript.tsx', 'angular.html' },
+			--			root_dir = require('lspconfig.util').root_pattern("angular.json", "nx.json", "package.json"),
+			--			settings = {
+			--				angular = {
+			--					forceStrictTemplates = true,
+			--					suggest = {
+			--						includeInlayHints = false,
+			--					}
+			--				},
+			--				html = {
+			--					format = {
+			--						wrapAttributes = "force", -- Это заставит переносить атрибуты
+			--						wrapLineLength = 80,
+			--					}
+			--				}
+			--			},
+			--			on_attach = function(client, bufnr)
+			--				if client.server_capabilities.inlayHintProvider then
+			--					vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+			--					client.server_capabilities.documentFormattingProvider = false
+			--				end
+			--			end,
+			--		})
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -134,31 +183,45 @@ return {
 				end,
 			})
 
-			lspconfig.cssls.setup({
+			lspconfig.somesass_ls.setup({
+				filetypes = { "scss", "sass" }, -- забирает только синтаксис Sass
 				root_dir = lspconfig.util.root_pattern("angular.json", "package.json", ".git"),
-				settings = {
-					css = {
-						validate = true,
-						importHelpers = true,
-					},
-					scss = {
-						validate = true,
-						scanImportedFiles = true,
-					},
-				},
-				capabilities = require('cmp_nvim_lsp').default_capabilities(),
-			})
-
-			lspconfig.somesass_ls.setup {
 				settings = {
 					somesass = {
 						scanImportedFiles = true,
-						includePaths = { vim.fn.getcwd() .. "/src" },
+						-- Исправляем слэши путей для Windows, чтобы сервер не слеп
+						includePaths = { vim.fs.normalize(vim.fn.getcwd() .. "/src") },
 						suggestAllFromOpenDocument = false,
 					}
 				},
-				root_dir = require('lspconfig').util.root_pattern("package.json", "angular.json", ".git"),
-			}
+				capabilities = capabilities,
+			})
+
+			--			lspconfig.cssls.setup({
+			--			root_dir = lspconfig.util.root_pattern("angular.json", "package.json", ".git"),
+			--			settings = {
+			--				css = {
+			--					validate = true,
+			--					importHelpers = true,
+			--				},
+			--				scss = {
+			--					validate = true,
+			--					scanImportedFiles = true,
+			--				},
+			--			},
+			--			capabilities = require('cmp_nvim_lsp').default_capabilities(),
+			--		})
+
+			--	lspconfig.somesass_ls.setup {
+			--		settings = {
+			--			somesass = {
+			--				scanImportedFiles = true,
+			--				includePaths = { vim.fn.getcwd() .. "/src" },
+			--				suggestAllFromOpenDocument = false,
+			--			}
+			--		},
+			--		root_dir = require('lspconfig').util.root_pattern("package.json", "angular.json", ".git"),
+			--	}
 
 			--		lspconfig.html.setup({
 			--		on_attach = on_attach,
@@ -182,31 +245,65 @@ return {
 			--		}
 			--	})
 
+			--	lspconfig.html.setup({
+			--	on_attach = function(client, bufnr)
+			--		if vim.bo[bufnr].filetype == "templ" then
+			--			client.server_capabilities.documentFormattingProvider = false
+			--			client.server_capabilities.documentRangeFormattingProvider = false
+			--			end
+			--			if type(on_attach) == "function" then
+			--				on_attach(client, bufnr)
+			--			end
+			--		end,
+			--		capabilities = capabilities,
+			--		filetypes = { "html", "angular", "templ" },
+			--		init_options = {
+			--			configurationSection = { "html", "css", "javascript", "templ", "angular" },
+			--			embeddedLanguages = {
+			--				css = true,
+			--				javascript = true
+			--			},
+			--			provideFormatter = true
+			--		},
+			--		settings = {
+			--			html = {
+			--				format = {
+			--					wrapAttributes = "force",
+			--					wrapLineLength = 40,
+			--				},
+			--			}
+			--		}
+			--	})
+
 			lspconfig.html.setup({
 				on_attach = function(client, bufnr)
 					if vim.bo[bufnr].filetype == "templ" then
 						client.server_capabilities.documentFormattingProvider = false
 						client.server_capabilities.documentRangeFormattingProvider = false
 					end
-					if type(on_attach) == "function" then
-						on_attach(client, bufnr)
-					end
+					-- common_on_attach(client, bufnr)
 				end,
+
 				capabilities = capabilities,
-				filetypes = { "html", "angular", "templ" },
+				filetypes = { "html", "htmlangular", "templ" },
+
 				init_options = {
-					configurationSection = { "html", "css", "javascript", "templ", "angular" },
+					configurationSection = { "html", "css", "javascript", "templ", "htmlangular" },
 					embeddedLanguages = {
 						css = true,
 						javascript = true
 					},
-					provideFormatter = true
+					provideFormatter = false
 				},
+
 				settings = {
 					html = {
 						format = {
 							wrapAttributes = "force",
 							wrapLineLength = 40,
+						},
+						customData = {
+							"https://githubusercontent.com"
 						}
 					}
 				}
@@ -262,7 +359,8 @@ return {
 							eruby = "erb",
 							heex = "phoenix-heex",
 							htmlangular = "html",
-							templ = "html"
+							templ = "html",
+							typescript = "typescript"
 						},
 						lint = {
 							cssConflict = "warning",
@@ -273,15 +371,32 @@ return {
 							invalidVariant = "error",
 							recommendedVariantOrder = "warning"
 						},
+						experimental = {
+							classRegex = {
+								{ "(?:class|ngClass|routerLinkActive)\\s*=\\s*['\"`]([^'\"`]*?)['\"`]",       "([^\\s]+)" },
+								{ "\\[(?:class|ngClass|routerLinkActive)\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]", "([^\\s]+)" },
+								{ "class=\\s*['\"`]([^'\"`]*?)['\"`]",                                        "(?:class|className)=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "routerLinkActive\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "\\[routerLinkActive\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "ngClass\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "\\[ngClass\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "class=\\s*['\"`]([^'\"`]*?)['\"`]",                                        "(?:class|className)=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "ngClass\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "\\[ngClass\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "class\\.[a-zA-O0-9-_]+\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
+								{ "template\\s*:\\s*`([^`]*?)`" },
+							},
+						},
 						validate = true
 					}
-				}
+				},
+				capabilities = require('cmp_nvim_lsp').default_capabilities(),
 			})
 
---			require('nvim-treesitter.configs').setup({
-	--			ensure_installed = { "html", "javascript", "templ", "go" },
-	--			highlight = { enable = true },
-	--		})
+			--			require('nvim-treesitter.configs').setup({
+			--			ensure_installed = { "html", "javascript", "templ", "go" },
+			--			highlight = { enable = true },
+			--		})
 
 			vim.filetype.add({ extension = { templ = "templ" } })
 

@@ -5,13 +5,13 @@ return {
 		config = function()
 			require("conform").setup({
 				format_on_save = {
-				--	timeout_ms = 500,
+					--	timeout_ms = 500,
 					lsp_fallback = false,
 					async = false, -- Если поставить true, дергаться будет меньше, но файл может не успеть сохраниться
 				},
 				formatters_by_ft = {
 					go = { "gopls", "goimports", "gofumpt", "golines" },
-					templ = {"templ"},
+					templ = { "templ" },
 					lua = { "stylua" },
 					python = { "isort", "black" },
 					rust = { "rustfmt", lsp_format = "fallback" },
@@ -21,7 +21,7 @@ return {
 					typescriptreact = { "prettier" },
 					angular = { "angular_html" },
 					["angular.html"] = { "angular_html" },
-					html = { "angular_html"},
+					html = { "angular_html" },
 					css = { "prettier" },
 					scss = { "prettier" },
 					json = { "prettier" },
@@ -31,7 +31,7 @@ return {
 						args = { "--stdin-filepath", "$FILENAME" },
 					},
 					golines = {
-						args = { "--max-len=60", "--base-formatter=gofmt" },
+						args = { "--max-len=80", "--base-formatter=gofmt" },
 					},
 					angular_html = {
 						command = "prettier",
@@ -59,7 +59,8 @@ return {
 			vim.api.nvim_create_autocmd("BufWritePre", {
 				pattern = "*",
 				callback = function(args)
-					require("conform").format({ bufnr = args.buf })
+					require("conform").format({
+						bufnr = args.buf })
 				end,
 			})
 		end,

@@ -26,6 +26,13 @@ vim.filetype.add({
 	},
 })
 
+vim.filetype.add({
+	extension = {
+		templ = "templ",
+	},
+})
+
+vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.signcolumn = "yes" -- Панель слева всегда на месте, текст не прыгает
 vim.api.nvim_create_autocmd("InsertEnter", {
@@ -39,21 +46,30 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 	end,
 })
 
+vim.g.db_ui_use_horizontal_layouts = 1
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "dbout",
+	callback = function()
+		vim.cmd("wincmd J") -- Перемещает текущее окно в самый низ (горизонтально)
+		vim.cmd("resize 5") -- Устанавливает высоту 15 строк
+	end,
+})
+
 local original_notify = vim.notify
 vim.notify = function(msg, level, opts)
-  local forbidden = {
-    "db worker",
-    "Update db cache",
-    "sqls",
-    "postgres_lsp",
-    "exit code 1"
-  }
-  for _, word in ipairs(forbidden) do
-    if msg:find(word) then
-      return
-    end
-  end
-  original_notify(msg, level, opts)
+	local forbidden = {
+		"db worker",
+		"Update db cache",
+		"sqls",
+		"postgres_lsp",
+		"exit code 1"
+	}
+	for _, word in ipairs(forbidden) do
+		if msg:find(word) then
+			return
+		end
+	end
+	original_notify(msg, level, opts)
 end
 
 require("lazy").setup({
