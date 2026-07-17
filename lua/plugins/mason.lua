@@ -19,22 +19,24 @@ return {
 			require("mason-lspconfig").setup(
 				{
 					ensure_installed = {
-						"prismals",
-						"lua_ls",
-						"gopls",
-						"sqls",
-						"sqlls",
-						"ts_ls",
-						"html",
-						"htmx",
+						"angularls",
+						"cmake",
 						"cssls",
 						"cssmodules_ls",
-						"cmake",
-						"dockerls",
 						"docker_compose_language_service",
+						"dockerls",
+						"eslint",
+						"gopls",
+						"html",
+						"htmx",
+						"lua_ls",
 						"postgres_lsp",
+						"prismals",
+						"somesass_ls",
+						"sqls",
 						"tailwindcss",
-						"angularls",
+						"templ",
+						"ts_ls"
 					}
 				})
 		end

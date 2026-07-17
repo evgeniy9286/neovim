@@ -3,7 +3,7 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- Mouse
-vim.opt.mouse = "a"
+vim.opt.mouse = ""
 vim.opt.mousefocus = true
 vim.opt.cursorline = true
 
@@ -32,5 +32,3 @@ vim.opt.fillchars = {
 	foldclose = "▸",
 }
 
--- Templ
-vim.filetype.add({ extension = { templ = "templ" } })

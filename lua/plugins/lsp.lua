@@ -29,14 +29,6 @@ return {
 							unusedparams = true,
 							shadow = true,
 						},
-						--		hints = {
-						--			assignVariableTypes = true,
-						--			compositeLiteralFields = true,
-						--			constantValues = true,
-						--			functionTypeParameters = true,
-						--			parameterNames = true,
-						--			rangeVariableTypes = true,
-						--		},
 						codelenses = {
 							generate = true,
 							test = true,
@@ -61,9 +53,6 @@ return {
 					},
 				},
 			})
-
-			--			lspconfig.sqlls.setup({})
-
 
 			require('lspconfig').ts_ls.setup({
 				settings = {
@@ -144,34 +133,6 @@ return {
 				end,
 			})
 
-
-			--			lspconfig.angularls.setup({
-			--			on_attach = on_attach,
-			--			capabilities = capabilities,
-			--			filetypes = { 'typescript', 'html', 'typescript.angular', 'typescript.tsx', 'angular.html' },
-			--			root_dir = require('lspconfig.util').root_pattern("angular.json", "nx.json", "package.json"),
-			--			settings = {
-			--				angular = {
-			--					forceStrictTemplates = true,
-			--					suggest = {
-			--						includeInlayHints = false,
-			--					}
-			--				},
-			--				html = {
-			--					format = {
-			--						wrapAttributes = "force", -- Это заставит переносить атрибуты
-			--						wrapLineLength = 80,
-			--					}
-			--				}
-			--			},
-			--			on_attach = function(client, bufnr)
-			--				if client.server_capabilities.inlayHintProvider then
-			--					vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-			--					client.server_capabilities.documentFormattingProvider = false
-			--				end
-			--			end,
-			--		})
-
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities.textDocument.completion.completionItem.snippetSupport = true
 
@@ -197,83 +158,21 @@ return {
 				capabilities = capabilities,
 			})
 
-			--			lspconfig.cssls.setup({
-			--			root_dir = lspconfig.util.root_pattern("angular.json", "package.json", ".git"),
-			--			settings = {
-			--				css = {
-			--					validate = true,
-			--					importHelpers = true,
-			--				},
-			--				scss = {
-			--					validate = true,
-			--					scanImportedFiles = true,
-			--				},
-			--			},
-			--			capabilities = require('cmp_nvim_lsp').default_capabilities(),
-			--		})
-
-			--	lspconfig.somesass_ls.setup {
-			--		settings = {
-			--			somesass = {
-			--				scanImportedFiles = true,
-			--				includePaths = { vim.fn.getcwd() .. "/src" },
-			--				suggestAllFromOpenDocument = false,
-			--			}
-			--		},
-			--		root_dir = require('lspconfig').util.root_pattern("package.json", "angular.json", ".git"),
-			--	}
-
-			--		lspconfig.html.setup({
-			--		on_attach = on_attach,
-			--		capabilities = capabilities,
-			--		filetypes = { "html", "angular" },
-			--		init_options = {
-			--			configurationSection = { "html", "css", "javascript" },
-			--			embeddedLanguages = {
-			--				css = true,
-			--				javascript = true
-			--			},
-			--			provideFormatter = true
-			--		},
-			--		settings = {
-			--			html = {
-			--				format = {
-			--					wrapAttributes = "force", -- Это заставит переносить атрибуты
-			--					wrapLineLength = 80,
-			--				}
-			--			}
-			--		}
-			--	})
-
-			--	lspconfig.html.setup({
-			--	on_attach = function(client, bufnr)
-			--		if vim.bo[bufnr].filetype == "templ" then
-			--			client.server_capabilities.documentFormattingProvider = false
-			--			client.server_capabilities.documentRangeFormattingProvider = false
-			--			end
-			--			if type(on_attach) == "function" then
-			--				on_attach(client, bufnr)
-			--			end
-			--		end,
-			--		capabilities = capabilities,
-			--		filetypes = { "html", "angular", "templ" },
-			--		init_options = {
-			--			configurationSection = { "html", "css", "javascript", "templ", "angular" },
-			--			embeddedLanguages = {
-			--				css = true,
-			--				javascript = true
-			--			},
-			--			provideFormatter = true
-			--		},
-			--		settings = {
-			--			html = {
-			--				format = {
-			--					wrapAttributes = "force",
-			--					wrapLineLength = 40,
-			--				},
-			--			}
-			--		}
-			--	})
+			lspconfig.cssls.setup({
+				root_dir = lspconfig.util.root_pattern("angular.json", "package.json", ".git"),
+				filetypes = { "css" },
+				settings = {
+					css = {
+						validate = true,
+						importHelpers = true,
+					},
+					scss = {
+						validate = true,
+						scanImportedFiles = true,
+					},
+				},
+				capabilities = require('cmp_nvim_lsp').default_capabilities(),
+			})
 
 			lspconfig.html.setup({
 				on_attach = function(client, bufnr)
@@ -334,8 +233,6 @@ return {
 
 			lspconfig.prismals.setup({})
 
-			--		lspconfig.postgrestools.setup({})
-
 			lspconfig.postgres_lsp.setup({
 				root_dir = lspconfig.util.root_pattern(".git", "go.mod", "sql"),
 				on_attach = function(client, bufnr)
@@ -347,7 +244,6 @@ return {
 
 			lspconfig.tailwindcss.setup({
 				on_attach = on_attach,
-				capabilities = capabilities,
 				cmd = { "tailwindcss-language-server", "--stdio" },
 				filetypes = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge", "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "gohtmltmpl", "haml", "handlebars", "hbs", "html", "htmlangular", "html-eex", "heex", "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css", "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript", "typescript", "typescriptreact", "vue", "svelte", "templ", "go" },
 				settings = {
@@ -360,7 +256,7 @@ return {
 							heex = "phoenix-heex",
 							htmlangular = "html",
 							templ = "html",
-							typescript = "typescript"
+							typescript = "html",
 						},
 						lint = {
 							cssConflict = "warning",
@@ -373,30 +269,17 @@ return {
 						},
 						experimental = {
 							classRegex = {
-								{ "(?:class|ngClass|routerLinkActive)\\s*=\\s*['\"`]([^'\"`]*?)['\"`]",       "([^\\s]+)" },
-								{ "\\[(?:class|ngClass|routerLinkActive)\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]", "([^\\s]+)" },
-								{ "class=\\s*['\"`]([^'\"`]*?)['\"`]",                                        "(?:class|className)=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "routerLinkActive\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "\\[routerLinkActive\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "ngClass\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "\\[ngClass\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "class=\\s*['\"`]([^'\"`]*?)['\"`]",                                        "(?:class|className)=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "ngClass\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "\\[ngClass\\]\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
-								{ "class\\.[a-zA-O0-9-_]+\\s*=\\s*['\"`]([^'\"`]*?)['\"`]" },
 								{ "template\\s*:\\s*`([^`]*?)`" },
+								{ "(?:\\[?class\\]?|\\[?ngClass\\]?|\\[?routerLinkActive\\]?)\\s*=\\s*['\"`]([^'\"`]*?)['\"`]", "([^\\s]+)" },
+								{ "\\[class\\.([a-zA-Z0-9-_]+)\\]\\s*=\\s*['\"`][^'\"`]*?['\"`]" },
+								{ "class\\.([a-zA-Z0-9-_]+)\\s*=\\s*['\"`][^'\"`]*?['\"`]" },
 							},
 						},
 						validate = true
 					}
 				},
-				capabilities = require('cmp_nvim_lsp').default_capabilities(),
+				capabilities = vim.tbl_deep_extend("force", capabilities or {}, require('cmp_nvim_lsp').default_capabilities()),
 			})
-
-			--			require('nvim-treesitter.configs').setup({
-			--			ensure_installed = { "html", "javascript", "templ", "go" },
-			--			highlight = { enable = true },
-			--		})
 
 			vim.filetype.add({ extension = { templ = "templ" } })
 
@@ -415,18 +298,14 @@ return {
 				callback = function(ev)
 					vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 					local opts = { buffer = ev.buf }
-					--	vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
 					vim.keymap.set('n', 'gd', function()
 						local ok, telescope = pcall(require, 'telescope.builtin')
 						if ok then
-							-- Если есть одно совпадение — прыгает сразу.
-							-- Если несколько — открывает список выбора Telescope.
 							telescope.lsp_definitions({
 								reuse_win = true,
 								jump_type = "never",
 							})
 						else
-							-- Запасной вариант, если Telescope не установлен
 							vim.lsp.buf.definition()
 						end
 					end, opts)
